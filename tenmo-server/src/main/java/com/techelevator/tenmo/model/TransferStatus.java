@@ -11,4 +11,7 @@ public class TransferStatus {
     public void setTransferStatusId(int transferStatusId) {
         this.transferStatusId = transferStatusId;
     }
+
+    public void setTransferStatusDesc(String transferStatusDesc) {
+    }
 }

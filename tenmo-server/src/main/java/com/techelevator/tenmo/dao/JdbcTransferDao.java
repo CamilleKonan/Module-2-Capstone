@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferStatus;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -201,5 +202,43 @@ public class JdbcTransferDao implements TransferDao {
             throw new RuntimeException("Error retrieving transfers by amount range", e);
         }
         return transfers;
+    }
+
+    @Override
+    public TransferStatus getTransferStatusById(int statusId) {
+        String sql = "SELECT * FROM transfer_statuses WHERE transferStatusId = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, statusId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                TransferStatus status = new TransferStatus();
+                status.setTransferStatusId(rs.getInt("transferStatusId"));
+                status.setTransferStatusDesc(rs.getString("transferStatusDesc"));
+                return status;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving transfer status by ID", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<TransferStatus> getAllTransferStatuses() {
+        String sql = "SELECT * FROM transfer_statuses";
+        List<TransferStatus> statuses = new ArrayList<>();
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                TransferStatus status = new TransferStatus();
+                status.setTransferStatusId(rs.getInt("transferStatusId"));
+                status.setTransferStatusDesc(rs.getString("transferStatusDesc"));
+                statuses.add(status);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving all transfer statuses", e);
+        }
+        return statuses;
     }
 }
