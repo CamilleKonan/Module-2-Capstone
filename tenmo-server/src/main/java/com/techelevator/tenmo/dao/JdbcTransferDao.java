@@ -34,7 +34,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public void createTransfer(Transfer transfer) {
         // SQL query for inserting a new transfer record
-        String sql = "INSERT INTO transfers (transferTypeId, transferStatusId, accountFrom, accountTo, amount) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transfer (transfer_Type_Id, transfer_Status_Id, account_From, account_To, amount) VALUES (?, ?, ?, ?, ?)";
 
         // Try-with-resources block ensures the PreparedStatement will be closed automatically
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -63,7 +63,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer getTransferById(int transferId) {
         // SQL query to select a transfer by ID
-        String sql = "SELECT * FROM transfers WHERE transferId = ?";
+        String sql = "SELECT * FROM transfer WHERE transfer_Id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             // Set the transferId parameter in the query
@@ -75,11 +75,11 @@ public class JdbcTransferDao implements TransferDao {
             // If a transfer is found, create and return the Transfer object
             if (rs.next()) {
                 Transfer transfer = new Transfer();
-                transfer.setTransferId(rs.getInt("transferId"));
-                transfer.setTransferTypeId(rs.getInt("transferTypeId"));
-                transfer.setTransferStatusId(rs.getInt("transferStatusId"));
-                transfer.setAccountFrom(rs.getInt("accountFrom"));
-                transfer.setAccountTo(rs.getInt("accountTo"));
+                transfer.setTransferId(rs.getInt("transfer_Id"));
+                transfer.setTransferTypeId(rs.getInt("transfer_Type_Id"));
+                transfer.setTransferStatusId(rs.getInt("transfer_Status_Id"));
+                transfer.setAccountFrom(rs.getInt("account_From"));
+                transfer.setAccountTo(rs.getInt("account_To"));
                 transfer.setAmount(rs.getBigDecimal("amount"));
                 return transfer;
             }
@@ -100,7 +100,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public void updateTransfer(Transfer transfer) {
         // SQL query to update a transfer record
-        String sql = "UPDATE transfers SET transferTypeId = ?, transferStatusId = ?, accountFrom = ?, accountTo = ?, amount = ? WHERE transferId = ?";
+        String sql = "UPDATE transfer SET transfer_Type_Id = ?, transfer_Status_Id = ?, account_From = ?, account_To = ?, amount = ? WHERE transfer_Id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             // Set the updated values from the Transfer object into the query parameters
@@ -123,16 +123,16 @@ public class JdbcTransferDao implements TransferDao {
     /**
      * Deletes a transfer record by its ID from the database.
      *
-     * @param transferId the ID of the transfer to delete.
+     * @param transfer_Id the ID of the transfer to delete.
      */
     @Override
-    public void deleteTransfer(int transferId) {
+    public void deleteTransfer(int transfer_Id) {
         // SQL query to delete a transfer by its ID
-        String sql = "DELETE FROM transfers WHERE transferId = ?";
+        String sql = "DELETE FROM transfer WHERE transfer_Id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             // Set the transferId parameter in the query
-            pstmt.setInt(1, transferId);
+            pstmt.setInt(1, transfer_Id);
 
             // Execute the query to delete the transfer
             pstmt.executeUpdate();
@@ -151,7 +151,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getAllTransfers() {
         // SQL query to select all transfers
-        String sql = "SELECT * FROM transfers";
+        String sql = "SELECT * FROM transfer";
         List<Transfer> transfers = new ArrayList<>();
 
         try (Statement stmt = connection.createStatement();
@@ -159,11 +159,11 @@ public class JdbcTransferDao implements TransferDao {
             // Iterate through the result set and populate the list with Transfer objects
             while (rs.next()) {
                 Transfer transfer = new Transfer();
-                transfer.setTransferId(rs.getInt("transferId"));
-                transfer.setTransferTypeId(rs.getInt("transferTypeId"));
-                transfer.setTransferStatusId(rs.getInt("transferStatusId"));
-                transfer.setAccountFrom(rs.getInt("accountFrom"));
-                transfer.setAccountTo(rs.getInt("accountTo"));
+                transfer.setTransferId(rs.getInt("transfer_Id"));
+                transfer.setTransferTypeId(rs.getInt("transfer_Type_Id"));
+                transfer.setTransferStatusId(rs.getInt("transfer_Status_Id"));
+                transfer.setAccountFrom(rs.getInt("account_From"));
+                transfer.setAccountTo(rs.getInt("account_To"));
                 transfer.setAmount(rs.getBigDecimal("amount"));
                 transfers.add(transfer);
             }
@@ -184,7 +184,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getTransfersByAccountId(int accountId) {
         // SQL query to select transfers where the account is either sending or receiving funds
-        String sql = "SELECT * FROM transfers WHERE accountFrom = ? OR accountTo = ?";
+        String sql = "SELECT * FROM transfer WHERE account_From = ? OR account_To = ?";
         List<Transfer> transfers = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -196,11 +196,11 @@ public class JdbcTransferDao implements TransferDao {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Transfer transfer = new Transfer();
-                transfer.setTransferId(rs.getInt("transferId"));
-                transfer.setTransferTypeId(rs.getInt("transferTypeId"));
-                transfer.setTransferStatusId(rs.getInt("transferStatusId"));
-                transfer.setAccountFrom(rs.getInt("accountFrom"));
-                transfer.setAccountTo(rs.getInt("accountTo"));
+                transfer.setTransferId(rs.getInt("transfer_Id"));
+                transfer.setTransferTypeId(rs.getInt("transfer_Type_Id"));
+                transfer.setTransferStatusId(rs.getInt("transfer_Status_Id"));
+                transfer.setAccountFrom(rs.getInt("account_From"));
+                transfer.setAccountTo(rs.getInt("account_To"));
                 transfer.setAmount(rs.getBigDecimal("amount"));
                 transfers.add(transfer);
             }
@@ -215,28 +215,28 @@ public class JdbcTransferDao implements TransferDao {
     /**
      * Retrieves all transfers with a specific status from the database.
      *
-     * @param statusId the ID of the status to filter transfers.
+     * @param status_Id the ID of the status to filter transfers.
      * @return a list of Transfer objects with the given status.
      */
     @Override
-    public List<Transfer> getTransfersByStatus(int statusId) {
+    public List<Transfer> getTransfersByStatus(int status_Id) {
         // SQL query to select transfers by status ID
-        String sql = "SELECT * FROM transfers WHERE transferStatusId = ?";
+        String sql = "SELECT * FROM transfers WHERE transfer_Status_Id = ?";
         List<Transfer> transfers = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             // Set the statusId parameter in the query
-            pstmt.setInt(1, statusId);
+            pstmt.setInt(1, status_Id);
 
             // Execute the query and populate the list with Transfer objects
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Transfer transfer = new Transfer();
-                transfer.setTransferId(rs.getInt("transferId"));
-                transfer.setTransferTypeId(rs.getInt("transferTypeId"));
-                transfer.setTransferStatusId(rs.getInt("transferStatusId"));
-                transfer.setAccountFrom(rs.getInt("accountFrom"));
-                transfer.setAccountTo(rs.getInt("accountTo"));
+                transfer.setTransferId(rs.getInt("transfer_Id"));
+                transfer.setTransferTypeId(rs.getInt("transfer_Type_Id"));
+                transfer.setTransferStatusId(rs.getInt("transfer_Status_Id"));
+                transfer.setAccountFrom(rs.getInt("account_From"));
+                transfer.setAccountTo(rs.getInt("account_To"));
                 transfer.setAmount(rs.getBigDecimal("amount"));
                 transfers.add(transfer);
             }
@@ -249,17 +249,17 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public List<Transfer> getTransfersByType(int typeId) {
+    public List<Transfer> getTransfersByType(int type_Id) {
         return List.of();
     }
 
     @Override
-    public List<Transfer> getTransfersByAmountRange(BigDecimal minAmount, BigDecimal maxAmount) {
+    public List<Transfer> getTransfersByAmountRange(BigDecimal min_Amount, BigDecimal max_Amount) {
         return List.of();
     }
 
     @Override
-    public TransferStatus getTransferStatusById(int statusId) {
+    public TransferStatus getTransferStatusById(int status_Id) {
         return null;
     }
 
