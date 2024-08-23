@@ -1,4 +1,4 @@
-package com.techelevator.tenmo.model;
+package com.techelevator.tenmo.server.model;
 import java.math.BigDecimal;
 public class Account {
     private int accountId;
