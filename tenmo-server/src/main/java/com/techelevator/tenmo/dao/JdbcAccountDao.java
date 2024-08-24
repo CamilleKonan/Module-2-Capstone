@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class JdbcAccountDao implements AccountDao {
+public abstract class JdbcAccountDao implements AccountDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,13 +24,14 @@ public class JdbcAccountDao implements AccountDao {
 
 
     @Override
-    public Account getAccountByUserId(int userId) {
-        String sql = "SELECT * FROM account WHERE user_id = ?;";
+    public Account getAccountById(int userId) {
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             return mapRowToAccount(results);
         }
         return null;
+
     }
 
     @Override
