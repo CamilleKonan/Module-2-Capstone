@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
@@ -7,9 +8,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class JdbcAccountDao implements AccountDao {
+public abstract class JdbcAccountDao implements AccountDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -22,13 +23,14 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public getByUserId(int userId) {
+    public Account getAccountById(int userId) {
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             return mapRowToAccount(results);
         }
         return null;
+
     }
 
     @Override
@@ -38,8 +40,8 @@ public class JdbcAccountDao implements AccountDao {
         return rowsAffected > 0;
     }
 
-    private com.techelevator.tenmo.server.model.Account mapRowToAccount(SqlRowSet rs) {
-        com.techelevator.tenmo.server.model.Account account = new com.techelevator.tenmo.server.model.Account();
+    private Account mapRowToAccount(SqlRowSet rs) {
+        Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUserId(rs.getInt("user_id"));
         account.setBalance(rs.getBigDecimal("balance"));
