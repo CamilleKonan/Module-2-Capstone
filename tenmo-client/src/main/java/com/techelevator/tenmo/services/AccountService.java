@@ -22,13 +22,7 @@ public class AccountService {
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "account/balance", HttpMethod.GET, entity, BigDecimal.class);
         return response.getBody();
-    }
-    public AccountDto getAccount(int userId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-        ResponseEntity<AccountDto> response = restTemplate.exchange(baseUrl + "account", HttpMethod.GET, entity, AccountDto.class);
-        return response.getBody();
+
     }
     public boolean transferBalance(int fromUserId, int toUserId, BigDecimal amount) {
         HttpHeaders headers = new HttpHeaders();
