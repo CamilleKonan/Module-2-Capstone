@@ -21,6 +21,7 @@ public class BasicLogger {
 				if(!userDir.endsWith(DIRECTORY_NAME)) {
 					userDir += File.separator + DIRECTORY_NAME;
 				}
+				
 
 				String logFilename = userDir + File.separator + "logs/" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".log";
 				pw = new PrintWriter(new FileOutputStream(logFilename, true));

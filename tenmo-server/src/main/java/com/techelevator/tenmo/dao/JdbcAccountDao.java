@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public abstract class JdbcAccountDao implements AccountDao {
+public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
