@@ -1,18 +1,19 @@
 package com.techelevator.tenmo.controller;
-import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.JdbcTransferDao;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("/transfer")
 public class TransferController {
-private TransferDao transferDao;
-
-
+    private final JdbcTransferDao transferDao;
+    // Constructor injection of JdbcTransferDao
+    public TransferController(JdbcTransferDao transferDao) {
+        this.transferDao = transferDao;
+    }
     @GetMapping("/{transferId}")
     public Transfer getTransferById(@PathVariable int transferId) {
         return transferDao.getTransferById(transferId);
@@ -22,12 +23,10 @@ private TransferDao transferDao;
         boolean success = transferDao.createTransfer(transfer);
         return success ? "Transfer created successfully" : "Failed to create transfer";
     }
-
     @GetMapping("/user/{userId}")
     public List<Transfer> getTransfersByUserId(@PathVariable int userId) {
         return transferDao.getTransfersByUserId(userId);
     }
-
     @GetMapping("/pending/{userId}")
     public List<Transfer> getPendingTransfers(@PathVariable int userId) {
         return transferDao.getPendingTransfers(userId);

@@ -1,9 +1,11 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.TransferDto;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -88,4 +90,84 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
+    public void printBalance(BigDecimal balance) {
+        System.out.println("Your current balance is: $" + balance);
+    }
+
+    public void printTransferHistory(List<TransferDto> transfers)  {
+        System.out.println("-------------------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID          From/To                 Amount");
+        System.out.println("-------------------------------------------");
+        for (TransferDto transfer : transfers) {
+            String fromTo;
+            if (transfer.getAccountFrom() == transfer.getAccountTo()) {
+                fromTo = "Self";
+            } else if (transfer.getAccountFrom() == transfer.getAccountTo()) {
+                fromTo = "Self";
+            } else {
+                // Assumed logic for determining if it's "From" or "To"
+                fromTo = (transfer.getTransferTypeId() == 2 ? "To:    " : "From:  ") + transfer.getAccountTo();
+            }
+            System.out.printf("%-12d %-22s $%10.2f%n",
+                    transfer.getTransferId(),
+                    fromTo,
+                    transfer.getAmount());
+        }
+        System.out.println("-------------------------------------------");
+    }
+    public void printTransferDetails(TransferDto transfer) {
+        System.out.println("--------------------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("--------------------------------------------");
+        System.out.printf("Id: %d%n", transfer.getTransferId());
+        System.out.printf("From: %d%n", transfer.getAccountFrom());
+        System.out.printf("To: %d%n", transfer.getAccountTo());
+        System.out.printf("Type: %s%n", getTransferTypeDescription(transfer.getTransferTypeId()));
+        System.out.printf("Status: %s%n", getTransferStatusDescription(transfer.getTransferStatusId()));
+        System.out.printf("Amount: $%.2f%n", transfer.getAmount());
+        System.out.println("--------------------------------------------");
+    }
+    private String getTransferTypeDescription(int transferTypeId) {
+        switch (transferTypeId) {
+            case 1:
+                return "Request";
+            case 2:
+                return "Send";
+            default:
+                return "Unknown";
+        }
+    }
+    private String getTransferStatusDescription(int transferStatusId) {
+        switch (transferStatusId) {
+            case 1:
+                return "Pending";
+            case 2:
+                return "Approved";
+            case 3:
+                return "Rejected";
+            default:
+                return "Unknown";
+        }
+    }
+    public void printPendingTransfers(List<TransferDto> pendingTransfers) {
+        System.out.println("-------------------------------------------");
+        System.out.println("Pending Transfers");
+        System.out.println("ID          To/From                Amount");
+        System.out.println("-------------------------------------------");
+        for (TransferDto transfer : pendingTransfers) {
+            String toFrom;
+            // Assuming '1' is the "Request" type; you can modify this as needed
+            if (transfer.getTransferTypeId() == 1) {
+                toFrom = "From:  " + transfer.getAccountFrom(); // Transfer request coming from another user
+            } else {
+                toFrom = "To:    " + transfer.getAccountTo(); // Transfer request sent to another user
+            }
+            System.out.printf("%-12d %-22s $%10.2f%n",
+                    transfer.getTransferId(),
+                    toFrom,
+                    transfer.getAmount());
+        }
+        System.out.println("-------------------------------------------");
+    }
 }
