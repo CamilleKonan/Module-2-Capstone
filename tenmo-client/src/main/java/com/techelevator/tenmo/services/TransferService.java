@@ -51,12 +51,12 @@ public class TransferService {
                 Void.class);
         return response.getStatusCode() == HttpStatus.CREATED;
     }
-    public boolean approveTransfer(int transferId, int approverId) {
+    public boolean approveTransfer(int transferId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         ResponseEntity<Void> response = restTemplate.exchange(
-                baseUrl + "transfers/" + transferId + "/approve",
+                baseUrl + "transfers/approve/" + transferId,
                 HttpMethod.PUT,
                 entity,
                 Void.class);

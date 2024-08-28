@@ -6,7 +6,6 @@ public class AccountDto {
     private int userId;
     private BigDecimal balance;
 
-    // Getters and Setters
     public int getAccountId() {
         return accountId;
     }

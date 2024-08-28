@@ -9,5 +9,6 @@ public interface AccountDao {
 
     Account getAccountById(int userId);
 
+    Account getAccountByAccountId(int accountId);
     boolean updateBalance(int accountId, BigDecimal newBalance);
 }

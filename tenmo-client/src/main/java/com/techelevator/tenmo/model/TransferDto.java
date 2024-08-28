@@ -9,7 +9,6 @@ public class TransferDto {
     private int accountTo;
     private BigDecimal amount;
 
-    // Getters and Setters
     public int getTransferId() {
         return transferId;
     }

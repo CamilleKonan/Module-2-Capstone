@@ -1,11 +1,14 @@
 package com.techelevator.tenmo;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.model.TransferDto;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.TransferService;
+import com.techelevator.util.BasicLogger;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -87,6 +90,7 @@ public class App {
     private void viewCurrentBalance() {
         BigDecimal balance = accountService.getBalance(currentUser.getUser().getId());
         consoleService.printBalance(balance);
+        BasicLogger.log("user check balance");
     }
     private void viewTransferHistory() {
         List<TransferDto> transfers = transferService.getTransfersByUserId(currentUser.getUser().getId());
@@ -104,7 +108,7 @@ public class App {
         if (transferId != 0) {
             String choice = consoleService.promptForString("Approve or Reject? (A/R): ").trim().toUpperCase();
             if ("A".equals(choice)) {
-                transferService.approveTransfer(transferId, currentUser.getUser().getId());
+                transferService.approveTransfer(transferId);
             } else if ("R".equals(choice)) {
                 transferService.rejectTransfer(transferId, currentUser.getUser().getId());
             }
@@ -121,14 +125,21 @@ public class App {
         }
     }
     private void requestBucks() {
+        User[] users = accountService.getUsers();
+        for (User user:users){
+            if(!user.getUsername().equals(currentUser.getUser().getUsername())){
+                System.out.println(user.getId());
+            }
+
+        }
         int recipientId = consoleService.promptForInt("Enter ID of user you are requesting from: ");
         BigDecimal amount = consoleService.promptForBigDecimal("Enter amount to request: ");
         TransferDto transferRequest = new TransferDto();
         transferRequest.setAccountFrom(recipientId);
         transferRequest.setAccountTo(currentUser.getUser().getId());
         transferRequest.setAmount(amount);
-        transferRequest.setTransferTypeId(1); // Assuming '1' indicates a "Request" transfer
-        transferRequest.setTransferStatusId(1); // Assuming '1' indicates "Pending"
+        transferRequest.setTransferTypeId(1);
+        transferRequest.setTransferStatusId(1);
         boolean success = transferService.createTransfer(transferRequest);
         if (success) {
             System.out.println("Request sent!");

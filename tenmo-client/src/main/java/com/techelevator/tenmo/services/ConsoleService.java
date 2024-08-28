@@ -159,7 +159,8 @@ public class ConsoleService {
             String toFrom;
             // Assuming '1' is the "Request" type; you can modify this as needed
             if (transfer.getTransferTypeId() == 1) {
-                toFrom = "From:  " + transfer.getAccountFrom(); // Transfer request coming from another user
+                toFrom = "From:  " + transfer.getAccountFrom();
+                // Transfer request coming from another user
             } else {
                 toFrom = "To:    " + transfer.getAccountTo(); // Transfer request sent to another user
             }

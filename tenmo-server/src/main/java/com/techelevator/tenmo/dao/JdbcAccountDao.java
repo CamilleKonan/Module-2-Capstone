@@ -28,6 +28,15 @@ public class JdbcAccountDao implements AccountDao {
         return null;
     }
     @Override
+    public Account getAccountByAccountId(int accountId) {
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        if (results.next()) {
+            return mapRowToAccount(results);
+        }
+        return null;
+    }
+    @Override
     public boolean updateBalance(int accountId, BigDecimal newBalance) {
         String sql = "UPDATE account SET balance = ? WHERE account_id = ?";
         int rowsAffected = jdbcTemplate.update(sql, newBalance, accountId);
